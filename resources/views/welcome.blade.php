@@ -1,102 +1,77 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Laravel</title>
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
-    <!-- Styles -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NF Reading Culture</title>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans|Poppins:400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet">
     <style>
-        html,
         body {
-            background-color: #fff;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
-            margin: 0;
+            background-image: url('/images/bg.jpg');
+            background-size: cover;
         }
 
-        .full-height {
-            height: 100vh;
+        h1 {
+            font-size: 40px;
         }
 
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-
-        .position-ref {
-            position: relative;
-        }
-
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
-        }
-
-        .content {
+        a {
+            width: 10em;
+            font-family: 'Poppins', sans-serif;
+            /* font-weight: bold; */
+            background:#f39c12;
+            color: #fff;
+            font-size: 1.6em;
             text-align: center;
+            padding: 14px;
+            letter-spacing: 1px;
+            position: relative;
+            top: 1em;
+            border-radius: 15px;
+            margin-bottom:2em;
         }
 
-        .title {
-            font-size: 84px;
-        }
-
-        .links>a {
-            color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: .1rem;
+        a:hover {
             text-decoration: none;
-            text-transform: uppercase;
+            color: #dfe6e9;
         }
 
-        .m-b-md {
-            margin-bottom: 30px;
+        p {
+            font-family: 'Satisfy', cursive;
+            color: #2c3e50;
         }
+
+        .card {
+            background-color:hsla(0, 100%, 90%, 0.3);;
+            border: none;
+            padding:5% !important;
+        }
+
+        span {
+            font-family: 'Satisfy', cursive;
+            color: #ecf0f1;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
 <body>
-    <div class="flex-center position-ref full-height">
-        @if (Route::has('login'))
-        <div class="top-right links">
-            @auth
-            <a href="{{ url('/home') }}">Home</a>
-            @else
-            <a href="{{ route('login') }}">Login</a>
-
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}">Register</a>
-            @endif
-            @endauth
+    <div class="container" style="margin-top: 5em; padding:2em;">
+        <div class="card my-4 p-4 m-auto" style="width:50rem;margin-top:3%;">
+            <img src="/images/nfrc.png" alt="" style="width:80px;" class="m-auto">
+            <p style="text-align:center; letter-spacing:1px; font-size:50px;" class="m-auto">
+                I read a book one day and my whole life was changed
+            </p>
+            <span class="m-auto my-5">-Orhan Pamuk</span>
+            <a href="/login" class=" shadow-sm m-auto" style="margin-bottom:2em;">Login</a>
         </div>
-        @endif
-
-        <div class="content">
-            <div class="title m-b-md">
-                Laravel
-            </div>
-
-            <div class="links">
-                <a href="https://laravel.com/docs">Docs</a>
-                <a href="https://laracasts.com">Laracasts</a>
-                <a href="https://laravel-news.com">News</a>
-                <a href="https://blog.laravel.com">Blog</a>
-                <a href="https://nova.laravel.com">Nova</a>
-                <a href="https://forge.laravel.com">Forge</a>
-                <a href="https://github.com/laravel/laravel">GitHub</a>
-            </div>
-        </div>
+        <div></div>
     </div>
 </body>
 

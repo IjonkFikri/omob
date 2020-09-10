@@ -1,8 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Clas;
+use App\Student;
+use App\Level;
+use Auth;
+use App\Unit;
+use App\Book;
+use App\Reading;
+use DB;
 use Illuminate\Http\Request;
 
 class ClassController extends Controller
@@ -14,8 +19,14 @@ class ClassController extends Controller
      */
     public function index()
     {
-        $class = Clas::all();
-        return view('class.index', compact('class'));
+
+       $students = DB::table('students')
+       ->join('levels','students.kelas_id','=','levels.id')
+       ->join('units','levels.units_id','=','units.id')
+       ->where('users_id',Auth::user()->id)
+       ->select('students.*','levels.nama_kelas','units.nama_unit')
+       ->paginate(5);
+        return view('kelas.index',compact('students'));
     }
 
     /**
@@ -25,7 +36,9 @@ class ClassController extends Controller
      */
     public function create()
     {
-        return view('class.create');
+        $units = Unit::all();
+        $levels = Level::all();
+        return view('kelas.create', compact('units', 'levels'));
     }
 
     /**
@@ -37,23 +50,26 @@ class ClassController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'kelas' => 'required',
+            'kelas_id'=>'required'
         ]);
-        $class = new Clas();
-        if ($class->Create($request->all())) {
-            return redirect('/class')->with(['success' => 'Pesan Berhasil']);
+        $kelas = new Student();
+        $kelas->user()->associate(Auth::id());
+        $kelas->kelas_id = $request->kelas_id;
+        if ($kelas->save()) {
+            toastr()->success('Data has been saved successfully!');
+            return redirect('kelas');
         }
-        return redirect('/class')->with(['error' => 'Pesan Error']);
+        toastr()->error('An error has occurred please try again later.');
+        return back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Clas  $clas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Clas $clas)
+    public function show($id)
     {
         //
     }
@@ -61,48 +77,58 @@ class ClassController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Clas  $clas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $class = Clas::find($id);
-        return view('class.edit', compact('class'));
+        $students = Student::find($id);
+        $units = Unit::all();
+        $levels = Level::all();
+        return view('kelas.edit',compact('students','units','levels'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Clas  $clas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            'kelas' => 'required',
+        'kelas_id' =>'required'
         ]);
-        $class = new Clas();
-        if ($class->find($id)->Update($request->all())) {
-            return redirect('/class')->with(['success' => 'Pesan Berhasil']);
+        $updateData = new Student();
+        if ($updateData->findOrFail($id)->update($request->all())) {
+            toastr()->success('Data has been update successfully!');
+            return redirect('kelas');
         }
-        return redirect('/class')->with(['error' => 'Pesan Error']);
+        toastr()->error('An error has occurred please try again later.');
+        return back();
     }
+    
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Clas  $clas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $class = new Clas();
-        if ($class->find($id)->Delete()) {
-            return redirect('/class')->with(['success' => 'Pesan Berhasil']);
+        $student = Student::where('id',$id)->get();
+        // dd($student->pluck('users_id'));
+        $buku    = Book::whereIn('users_id',$student->pluck('users_id'))->whereIn('kelas_id',$student->pluck('kelas_id'));
+        $buku->delete();
+        $reading = Reading::whereIn('users_id',$student->pluck('users_id'))->whereIn('kelas_id',$student->pluck('kelas_id'));
+        $reading->delete();
+        if (Student::findorFail($id)->delete()) {
+            toastr()->success('Data has been delete successfully!');
+            return redirect('kelas');
         }
-        return redirect('/class')->with(['error' => 'Pesan Error']);
+        toastr()->error('An error has occurred please try again later.');
+        return back();
     }
-    
 }
